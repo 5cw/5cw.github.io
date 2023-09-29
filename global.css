@@ -1,0 +1,71 @@
+body {
+    font-family: monospace;
+    color: white;
+    background-color: #292945;
+}
+
+#game {
+    text-align: center;
+    width: 26em;
+    margin: 30vh auto;
+    background-color: #141433;
+    border-style: solid;
+    border-color: #141433;
+}
+
+#turn {
+    font-size: 2em
+}
+
+.board {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    
+    gap: .3em;
+}
+
+.subboard {
+    border-style: solid;
+    background-color: #333344;
+    border-color: #333344;
+    display: grid;
+    gap: .3em;
+    grid-template-columns: auto auto auto;
+    
+}
+
+.subboard.active {
+    background-color: #9bf;
+    border-color: #9bf;
+}
+
+.square {
+    white-space: pre;
+    font-size: 2em;
+    z-index: 0;
+    border-color: black;
+    background-color: #243344;
+}
+
+.square.active {
+    background-color: #2196F3;
+}
+
+.square.active:hover {
+    background-color: #1133A3;
+    cursor: pointer;
+}
+
+.over {
+    font-size: 7em;
+    z-index: 2;
+    grid-area: 1 / 1 / span 3 / span 3;
+    pointer-events: none
+}
+
+.line {
+    position: absolute;
+    height: .5em;
+    background-color: red;
+    z-index: 1;
+}
