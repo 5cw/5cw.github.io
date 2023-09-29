@@ -1,14 +1,24 @@
-
-
 const game = document.getElementById('game')
+const turn_elem = document.getElementById('turn')
 
 const board = document.createElement('div')
+
+const reset_btn = document.createElement('div')
+reset_btn.id = 'btn'
+reset_btn.textContent = 'new game?'
+
+reset_btn.addEventListener('click', (event) => {
+    game.removeChild(reset_btn)
+    reset()
+})
 
 board.classList.add('board')
 
 let squares = []
 let boards = []
 let btxts = []
+
+let turn = 'X'
 
 for (let i = 0; i < 9; i++) {
     const subboard = document.createElement('div')
@@ -18,10 +28,9 @@ for (let i = 0; i < 9; i++) {
     for(let j = 0; j < 9; j++) {
         const sq = document.createElement('div')
         sq.classList.add('square')
-        sq.classList.add('active')
         sq.addEventListener('click', fill)
         sq.style.gridArea=`${Math.floor(j/3) + 1} / ${j%3 + 1}`
-        sq.textContent = ' '
+        
         sq.id = `${i}.${j}`
         subboard.appendChild(sq)
         squares.push(sq)
@@ -29,16 +38,17 @@ for (let i = 0; i < 9; i++) {
     const subtext = document.createElement('div')
     subtext.classList.add('over')
     subboard.append(subtext)
-    //subtext.textContent = "X"
+    //subtext.textContent = Math.random() < .5 ? "" : "X" 
     board.append(subboard)
     boards.push(subboard)
     btxts.push(subtext)
 }
 game.append(board)
 
-const turn_elem = document.getElementById('turn')
+//game.append(reset_btn)
 
-let turn = 'X'
+
+reset()
 
 const lines = [
     [0,1,2],
@@ -78,6 +88,7 @@ function fill(event) {
         turn_elem.textContent = win + " wins!"
         board.append(drawline(windex, 3.25))
         deactivate()
+        game.append(reset_btn)
     } else {
         turn = turn == 'X' ? 'O' : 'X'
         turn_elem.textContent = turn + "'s turn"
@@ -134,4 +145,20 @@ function drawline(i, scale=1) {
     line.style.transform = `translate(${x}em,${y}em) rotate(${angle}deg)`
     console.log(line.style.transform)
     return line
+}
+
+function reset() {
+    for (const sq of squares) {
+        sq.classList.add('active')
+        sq.textContent = ' '
+    }
+    for (const btxt of btxts) {
+        btxt.textContent = ""
+    }
+    for (const board of boards) {
+        board.classList.add('active')
+    }
+    document.querySelectorAll(".line").forEach(el => el.remove())
+    turn = 'X'
+    turn_elem.textContent = "X's turn"
 }
