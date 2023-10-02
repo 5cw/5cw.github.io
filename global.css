@@ -1,25 +1,33 @@
+:root {
+    --backdrop: #292945;
+    --dark-accent: #141433;
+    --disabled-board: #333344;
+    --board: #9bf;
+}
+
 body {
     font-family: monospace;
     color: white;
-    background-color: #292945;
+    background-color: var(--backdrop);
     
 }
 
 #game {
     position: relative;
-    text-align: center;
     width: 26em;
     margin: 30vh auto;
-    background-color: #141433;
+    background-color: var(--dark-accent);
     border-style: solid;
-    border-color: #141433;
+    border-color: var(--dark-accent);
 }
 
 #turn {
+
+    text-align: center;
     font-size: 2em
 }
 
-#game, .board, .subboard, .square {
+div, span {
     border-radius: 2px;
 }
 
@@ -30,7 +38,7 @@ body {
     left: 50%;
     transform: translate(-50%,-50%);
     border: solid;
-    border-color: #141433;
+    border-color: var(--dark-accent);
     border-radius: 5px;
     font-size: 2.2em;
 }
@@ -38,38 +46,41 @@ body {
 .board {
     display: grid;
     grid-template-columns: auto auto auto;
-    
+    position: relative;
     gap: .3em;
 }
 
 .subboard {
     border-style: solid;
-    background-color: #333344;
-    border-color: #333344;
+
+    text-align: center;
+    background-color: var(--disabled-board);
+    border-color: var(--disabled-board);
     display: grid;
     gap: .3em;
     grid-template-columns: auto auto auto;
-    
+    position: relative;
 }
 
 .subboard.active {
-    background-color: #9bf;
-    border-color: #9bf;
+    background-color: var(--board);
+    border-color: var(--board);
 }
 
 .square {
     white-space: pre;
+
     font-size: 2em;
     z-index: 0;
     border-color: black;
     background-color: #243344;
 }
 
-.square.active, #btn {
+.square.active, #btn, #reset {
     background-color: #2196F3;
 }
 
-.square.active:hover, #btn:hover {
+.square.active:hover, #btn:hover, #reset:hover {
     background-color: #1133A3;
     cursor: pointer;
 }
@@ -83,7 +94,86 @@ body {
 
 .line {
     position: absolute;
-    height: .5em;
+    height: calc(.4em + 3%);
     background-color: red;
+    border-radius: 10px;
+    border: solid;
+    border-width: 1.1px;
+    border-color: darkred;
+    z-index: 2;
+}
+
+.subboard .line {
     z-index: 1;
+}
+
+#setbtn {
+    position: absolute;
+    scale: 2;
+    top: 0.5em;
+    left: 0.5em;
+    transition: transform 0.2s, color 0s;
+    
+}
+
+#setbtn.active {
+    transform: rotate(60deg);
+    color: grey;
+}
+
+#setbtn:hover {
+    color: #5566D4;
+    cursor: pointer;
+}
+
+#settings {
+    position: absolute;
+    right: 100%;
+    transition: 0.2s;
+    font-size: 1.2em;
+    width: 75%;
+    background-color: #1F85D6;
+    border: solid var(--dark-accent);
+    margin: 0px .5em;
+    padding: .5em;
+    opacity: 0;
+}
+
+fieldset {
+    border: solid var(--dark-accent);
+}
+
+#settings.active {
+    opacity: 1;
+}
+
+
+legend {
+    font-size: 1.2em;
+}
+
+label {
+    display: block;
+}
+
+#reset {
+    width: 3em;
+    border-style: solid;
+    border-width: .13em;
+    border-color: #141433;
+    padding: .1em;
+}
+
+#resetdiv {
+    margin: 2% auto auto 10%;
+    
+}
+
+#reminder {
+    opacity: 0;
+    cursor: default;
+}
+
+#reminder.active {
+    opacity: 1;
 }
