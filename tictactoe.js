@@ -14,6 +14,8 @@ const draw_char = '/'
 
 let turn = 'X'
 
+let comp0
+
 const raw_settings = [
     {
         name: 'draw',
@@ -42,6 +44,35 @@ const raw_settings = [
                 text: "don't allow",
             }
         ]
+    },
+    {
+        name: 'playerx',
+        legend: 'X played by',
+        options: [
+            {
+                value: 'human',
+                text: 'human'
+            },
+            {
+                value: 'comp0',
+                text: 'perfect computer',
+                script: (event) => {
+                    if (board_changed || event.target.value != 'comp0') return
+                    update_settings()
+                    reset()
+                }
+            }
+        ],
+        exclusions: [
+            {
+                value: 'comp0',
+                setting: 'won',
+                disallowed: 'false',
+                default: 'true',
+                hover: "perfect computer strategy doesn't work in the variant where won boards are unplayable"
+            }
+        ],
+        
     }
 ]
 
@@ -66,6 +97,19 @@ raw_settings.forEach(
         const legend = document.createElement('legend')
         legend.textContent = setting.legend
         field.appendChild(legend)
+        const exclude = setting.exclusions ? (event) => {
+                for (const exclusion of setting.exclusions){
+                    const disable = event.returnValue && event.target.value == exclusion.value
+                    const ele = document.querySelector(`input[name=${exclusion.setting}][value=${exclusion.disallowed}]`)
+                    ele.disabled = disable
+                    ele.parentElement.style.opacity = disable ? .5 : 1
+                    ele.parentElement.title = disable ? exclusion.hover : ''
+                    if (ele.checked && disable) {
+                        document.querySelector(`input[name=${exclusion.setting}][value=${exclusion.default}]`).checked = true
+                    }
+                }
+            } : null
+        
         setting.options.forEach(
             (option, i) => {
                 const label = document.createElement('label')
@@ -77,6 +121,9 @@ raw_settings.forEach(
                     input.checked = true
                 }
                 input.addEventListener('input', setting_change)
+                if (setting.exclusions) {
+                    input.addEventListener('input', exclude)
+                }
                 if (option.script) {
                     input.addEventListener('input', option.script)
                 }
@@ -128,7 +175,7 @@ for (let i = 0; i < 9; i++) {
         sq.addEventListener('mouseleave', hide)
         sq.style.gridArea=`${Math.floor(j/3) + 1} / ${j%3 + 1}`
         
-        sq.id = `${i}.${j}`
+        sq.id = `s${i}${j}`
         subboard.appendChild(sq)
     }
     const subtext = document.createElement('div')
@@ -150,16 +197,22 @@ reset()
 
 
 function fill(event) {
+    const [_, brd, sq] = [...this.id]
+    make_move(brd, sq)
+}
+
+function make_move(brd, sq) {
     if (!board_changed) {
         update_settings()
     }
+    const targetsq = document.getElementById(`s${brd}${sq}`)
+    if (!targetsq.classList.contains('active')) {
+        console.log('invalid move!')
+        return
+    }
+    targetsq.textContent = turn
     board_changed = true
-    console.log(event)
-    if (!this.classList.contains('active')) return;
-    this.textContent = turn
-    const [brd, sq] = this.id.split('.')
     const brdno = "#b" + brd
-    console.log(document.getElementById(0))
     const boardtxt = document.querySelector(brdno + " .over")
     if (boardtxt.textContent == "") {
         const [win, windex] = checkwin(document.querySelectorAll(brdno + " .square"))
@@ -177,9 +230,9 @@ function fill(event) {
     }
     const [win, windex] = checkwin(document.querySelectorAll('.over'))
     if (win) {
-        if (windex > 0) {
+        if (windex > -1) {
             turn_elem.textContent = win + " wins!"
-            board.append(drawline(windex, 3.25))
+            board.append(drawline(windex))
         } else {
             turn_elem.textContent = "draw."
         }
@@ -188,7 +241,15 @@ function fill(event) {
     } else {
         turn = turn == 'X' ? 'O' : 'X'
         turn_elem.textContent = turn + "'s turn"
+        if (turn == 'X') 
+        switch (settings_table.playerx) {
+            case 'comp0':
+                make_move(...comp0.next().value)
+                break;
+        }
     }
+    
+    
 }
 
 function show(event) {
@@ -207,7 +268,6 @@ function setting_change(event) {
 }
 
 function activate_board(i) {
-    console.log(settings_table, document.querySelector(`#b${i} .over`))
     if (settings_table.won != 'true' && document.querySelector(`#b${i} .over`).textContent != "") {
         return false;
     }
@@ -242,7 +302,6 @@ function checkwin(arr) {
                 draw ++
             }
             if (a == b && b == c && a != " ") {
-                console.log(a,b,c)
                 return [a, i]
             }
         }
@@ -281,4 +340,25 @@ function reset() {
 
     document.getElementById('reminder').classList.remove('active')
     board_changed = false;
+    switch (settings_table.playerx) {
+        case 'comp0':
+            comp0 = comp0gen()
+            make_move(...comp0.next().value)
+            break;
+    }
+}
+
+function* comp0gen() {
+    yield [4, 4]
+    for (let i = 0; i<7; i++ ) {
+        yield [document.querySelector('.subboard.active').id[1], 4]
+    }
+    const last = document.querySelector('.subboard.active').id[1]
+    const opposite = 8 - last
+    yield [last, last]
+    for (let i = 0; i<16; i++) {
+        const brd = (document.querySelector(`#b${opposite}.active`) ?? document.querySelector('.subboard.active')).id[1]
+        const sq = document.querySelector(`#s${brd}${last}.active`) ? last : opposite
+        yield [brd, sq]
+    }
 }
