@@ -57,7 +57,16 @@ const raw_settings = [
                 value: 'comp0',
                 text: 'perfect computer',
                 script: (event) => {
-                    if (board_changed || event.target.value != 'comp0') return
+                    if (board_changed || event.target.value == 'player') return
+                    update_settings()
+                    reset()
+                }
+            },
+            {
+                value: 'random',
+                text: 'random',
+                script: (event) => {
+                    if (board_changed || event.target.value == 'player') return
                     update_settings()
                     reset()
                 }
@@ -73,6 +82,30 @@ const raw_settings = [
             }
         ],
         
+    },
+    {
+        name: 'playero',
+        legend: 'O played by',
+        options: [
+            {
+                value: 'human',
+                text: 'human'
+            },
+            {
+                value: 'random',
+                text: 'random'
+            }
+        ],
+        
+    },
+    {
+        name: 'delay',
+        legend: 'computer delay',
+        min: 0.0,
+        max: 2.0,
+        step: .01,
+        default: 0.0,
+        indicator: '{value}s'
     }
 ]
 
@@ -109,29 +142,48 @@ raw_settings.forEach(
                     }
                 }
             } : null
-        
-        setting.options.forEach(
-            (option, i) => {
-                const label = document.createElement('label')
-                const input = document.createElement('input')
-                input.type = 'radio'
-                input.name = setting.name
-                input.value = option.value
-                if (i < 1) {
-                    input.checked = true
+        if (setting.options)
+            setting.options.forEach(
+                (option, i) => {
+                    const label = document.createElement('label')
+                    const input = document.createElement('input')
+                    input.type = 'radio'
+                    input.name = setting.name
+                    input.value = option.value
+                    if (i < 1) {
+                        input.checked = true
+                    }
+                    input.addEventListener('input', setting_change)
+                    if (setting.exclusions) {
+                        input.addEventListener('input', exclude)
+                    }
+                    if (option.script) {
+                        input.addEventListener('input', option.script)
+                    }
+                    label.append(input)
+                    label.append(option.text)
+                    field.append(label)
                 }
-                input.addEventListener('input', setting_change)
-                if (setting.exclusions) {
-                    input.addEventListener('input', exclude)
-                }
-                if (option.script) {
-                    input.addEventListener('input', option.script)
-                }
-                label.append(input)
-                label.append(option.text)
-                field.append(label)
-            }
-        )
+            )
+        else {
+            const label = document.createElement('label')
+            const input = document.createElement('input')
+            input.type = 'range'
+            input.name = setting.name
+            input.value = setting.default
+            input.min = setting.min
+            input.max = setting.max
+            input.step = setting.step
+            const indicator = document.createElement('span')
+            indicator.textContent = setting.indicator.replace('{value}', setting.default)
+            input.addEventListener('input', setting_change)
+            input.addEventListener('input', (event) => {
+                indicator.textContent = setting.indicator.replace('{value}', event.target.value)
+            })
+            label.append(input)
+            label.append(indicator)
+            field.append(label)
+        }
         settings.insertBefore(field, update.parentElement)
     }
 )
@@ -139,7 +191,7 @@ raw_settings.forEach(
 let settings_table = {}
 
 function update_settings() {
-    document.querySelectorAll('#settings input:checked').forEach((input) => settings_table[input.name] = input.value)
+    document.querySelectorAll('#settings input:checked, #settings input[type=range]').forEach((input) => settings_table[input.name] = input.value)
 }
 update_settings()
 
@@ -171,8 +223,8 @@ for (let i = 0; i < 9; i++) {
         const sq = document.createElement('div')
         sq.classList.add('square')
         sq.addEventListener('click', fill)
-        sq.addEventListener('mouseenter', show)
-        sq.addEventListener('mouseleave', hide)
+        sq.addEventListener('mouseenter', preview)
+        sq.addEventListener('mouseleave', preview)
         sq.style.gridArea=`${Math.floor(j/3) + 1} / ${j%3 + 1}`
         
         sq.id = `s${i}${j}`
@@ -197,6 +249,7 @@ reset()
 
 
 function fill(event) {
+    if (board.classList.contains('locked')) return
     const [_, brd, sq] = [...this.id]
     make_move(brd, sq)
 }
@@ -205,7 +258,9 @@ function make_move(brd, sq) {
     if (!board_changed) {
         update_settings()
     }
+    board.classList.remove('locked')
     const targetsq = document.getElementById(`s${brd}${sq}`)
+    
     if (!targetsq.classList.contains('active')) {
         console.log('invalid move!')
         return
@@ -217,7 +272,7 @@ function make_move(brd, sq) {
     if (boardtxt.textContent == "") {
         const [win, windex] = checkwin(document.querySelectorAll(brdno + " .square"))
         boardtxt.textContent = win
-        if (win && windex > 0) {
+        if (win && windex > -1) {
             document.querySelector(brdno).append(drawline(windex))
         }
     }   
@@ -241,25 +296,34 @@ function make_move(brd, sq) {
     } else {
         turn = turn == 'X' ? 'O' : 'X'
         turn_elem.textContent = turn + "'s turn"
-        if (turn == 'X') 
-        switch (settings_table.playerx) {
-            case 'comp0':
-                make_move(...comp0.next().value)
-                break;
+        
+        auto_move(turn == 'X' ? settings_table.playerx : settings_table.playero)
+    }
+}
+
+function auto_move(setting) {
+    let move
+    switch (setting) {
+        case 'comp0':
+            move = comp0.next().value
+            break;
+        case 'random':
+            move = rand()
+            break;
+    }
+    if (move) {
+        if (settings_table.delay > 0){
+            board.classList.add('locked')
+            setTimeout(make_move, settings_table.delay * 1000, ...move)
+        } else {
+            make_move(...move)
         }
     }
-    
-    
 }
 
-function show(event) {
-    if (!this.classList.contains('active')) return;
-    this.textContent = turn
-}
-
-function hide(event) {
-    if (!this.classList.contains('active')) return;
-    this.textContent = ' '
+function preview(event) {
+    if (!this.classList.contains('active') || board.classList.contains('locked')) return;
+    this.textContent = event.type == 'mouseenter' ? turn : " "
 }
 
 function setting_change(event) {
@@ -340,12 +404,9 @@ function reset() {
 
     document.getElementById('reminder').classList.remove('active')
     board_changed = false;
-    switch (settings_table.playerx) {
-        case 'comp0':
-            comp0 = comp0gen()
-            make_move(...comp0.next().value)
-            break;
-    }
+
+    comp0 = comp0gen()
+    auto_move(settings_table.playerx)
 }
 
 function* comp0gen() {
@@ -361,4 +422,10 @@ function* comp0gen() {
         const sq = document.querySelector(`#s${brd}${last}.active`) ? last : opposite
         yield [brd, sq]
     }
+}
+
+function rand() {
+    const options = document.querySelectorAll('.square.active')
+    const choice = options[Math.floor(Math.random() * options.length)]
+    return [choice.id[1], choice.id[2]]
 }

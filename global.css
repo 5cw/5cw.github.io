@@ -76,8 +76,9 @@ div, span {
     background-color: #243344;
 }
 
-.square.active, #btn, #reset {
+.square.active, .locked .square.active:hover, #btn, #reset {
     background-color: #2196F3;
+    cursor: default;
 }
 
 .square.active:hover, #btn:hover, #reset:hover {
@@ -118,7 +119,7 @@ div, span {
 }
 
 #setbtn.active {
-    transform: rotate(60deg);
+    transform: rotate(-60deg);
     color: grey;
 }
 
@@ -130,6 +131,7 @@ div, span {
 #settings {
     position: absolute;
     right: 100%;
+    max-height: 0%;
     transition: 0.2s;
     font-size: 1.2em;
     width: 75%;
@@ -138,14 +140,18 @@ div, span {
     margin: 0px .5em;
     padding: .5em;
     opacity: 0;
-}
-
-fieldset {
-    border: solid var(--dark-accent);
+    overflow: hidden;
 }
 
 #settings.active {
     opacity: 1;
+    top: -1%;
+    max-height: 135%;
+}
+
+fieldset {
+    position: relative;
+    border: solid var(--dark-accent);
 }
 
 
@@ -172,9 +178,20 @@ label {
 
 #reminder {
     opacity: 0;
-    cursor: default;
+    pointer-events: none;
 }
 
 #reminder.active {
     opacity: 1;
+}
+
+input[type=range] {
+    width: 70%;
+}
+
+fieldset span {
+    position: absolute;
+    font-size: 1.1rem;
+    bottom: 30%;
+    left: 72%;
 }
