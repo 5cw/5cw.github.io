@@ -1,4 +1,5 @@
 
+//all the triplets of positions which make up a line
 const lines = [
     [0,1,2],
     [3,4,5],
@@ -9,12 +10,12 @@ const lines = [
     [0,4,8],
     [2,4,6]
 ]
-
+//draws are marked with
 const draw_char = '/'
 
 let turn = 'X'
-
-let comp0
+//comp0 is a generator, which needs to be reset sometimes
+let comp0 
 
 const raw_settings = [
     {
@@ -122,14 +123,16 @@ settings_btn.addEventListener('click', (event) => {
 })
 
 
-const update = document.getElementById('reset')
+const reset_btn = document.getElementById('reset')
 
+//generate settings html
 raw_settings.forEach(
     setting => {
         const field = document.createElement('fieldset')
         const legend = document.createElement('legend')
         legend.textContent = setting.legend
         field.appendChild(legend)
+        //a couple settings are mutually exclusive, this auto disables whichever settings are marked
         const exclude = setting.exclusions ? (event) => {
                 for (const exclusion of setting.exclusions){
                     const disable = event.returnValue && event.target.value == exclusion.value
@@ -184,36 +187,40 @@ raw_settings.forEach(
             label.append(indicator)
             field.append(label)
         }
-        settings.insertBefore(field, update.parentElement)
+        settings.insertBefore(field, reset_btn.parentElement)
     }
 )
-
+//object storing active settings at runtime
 let settings_table = {}
 
+/**
+ * stores selected settings in settings_table. this is only done when there is not an active game, to ensure the user does not
+ * change settings during gameplay
+ */
 function update_settings() {
     document.querySelectorAll('#settings input:checked, #settings input[type=range]').forEach((input) => settings_table[input.name] = input.value)
 }
 update_settings()
 
 
-update.addEventListener('click', (event) => {
+reset_btn.addEventListener('click', (event) => {
     update_settings()
     settings.classList.remove('active')
     reset()
 })
 
-const reset_btn = document.createElement('div')
-reset_btn.id = 'btn'
-reset_btn.textContent = 'new game?'
+const new_game = document.createElement('div')
+new_game.id = 'new_game'
+new_game.textContent = 'new game?'
 
-reset_btn.addEventListener('click', (event) => {
-    reset_btn.style.display = "none"
+new_game.addEventListener('click', (event) => {
+    new_game.style.display = "none"
     reset()
 })
 
 board.classList.add('board')
 
-
+//generate board
 for (let i = 0; i < 9; i++) {
     const subboard = document.createElement('div')
     subboard.id = 'b' + i
@@ -222,10 +229,10 @@ for (let i = 0; i < 9; i++) {
     for(let j = 0; j < 9; j++) {
         const sq = document.createElement('div')
         sq.classList.add('square')
-        sq.addEventListener('click', fill)
+        sq.addEventListener('click', click_sq)
         sq.addEventListener('mouseenter', preview)
         sq.addEventListener('mouseleave', preview)
-        sq.style.gridArea=`${Math.floor(j/3) + 1} / ${j%3 + 1}`
+        sq.style.gridArea=`${Math.floor(j/3) + 1} / ${j%3 + 1}` //gridArea is specified so that an overlay of the winning player can be used
         
         sq.id = `s${i}${j}`
         subboard.appendChild(sq)
@@ -240,20 +247,28 @@ for (let i = 0; i < 9; i++) {
 }
 game.append(board)
 
-game.append(reset_btn)
-reset_btn.style.display = "none"
+game.append(new_game)
+new_game.style.display = "none" //only show new game on game over
+
 
 let board_changed = false;
 
 reset()
 
-
-function fill(event) {
+/**
+ * handler for clicking a square
+ */
+function click_sq(event) {
     if (board.classList.contains('locked')) return
     const [_, brd, sq] = [...this.id]
     make_move(brd, sq)
 }
 
+/**
+ * updates board with a given move location
+ * @param {string | number} brd subboard number
+ * @param {string | number} sq square number
+ */
 function make_move(brd, sq) {
     if (!board_changed) {
         update_settings()
@@ -292,7 +307,7 @@ function make_move(brd, sq) {
             turn_elem.textContent = "draw."
         }
         deactivate()
-        reset_btn.style.display = "block"
+        new_game.style.display = "block"
     } else {
         turn = turn == 'X' ? 'O' : 'X'
         turn_elem.textContent = turn + "'s turn"
@@ -301,6 +316,11 @@ function make_move(brd, sq) {
     }
 }
 
+
+/**
+ * handler for computer move
+ * @param {string} setting type of player whose turn it is 
+ */
 function auto_move(setting) {
     let move
     switch (setting) {
@@ -321,16 +341,28 @@ function auto_move(setting) {
     }
 }
 
+/**
+ * handler for showing and hiding a preview of the move the player would make when mousing over a square
+ * @param {*} event mouseenter or mouseleave event 
+ */
 function preview(event) {
     if (!this.classList.contains('active') || board.classList.contains('locked')) return;
     this.textContent = event.type == 'mouseenter' ? turn : " "
 }
 
-function setting_change(event) {
+/**
+ * handler for a setting being changed. makes visible text clarifying the user must reset for the changes to take effect.
+ */
+function setting_change(_) {
     if (!board_changed) return
     document.getElementById('reminder').classList.add('active')
 }
 
+/**
+ * activates subboard at position i
+ * @param {number} i position of subboard 
+ * @returns 
+ */
 function activate_board(i) {
     if (settings_table.won != 'true' && document.querySelector(`#b${i} .over`).textContent != "") {
         return false;
@@ -348,15 +380,20 @@ function activate_board(i) {
     return active > 0
 }
 
+/**
+ * deactivates all subboards and squares
+ */
 function deactivate () {
-    for(const element of document.querySelectorAll('.subboard') ){
-        element.classList.remove('active')
-    }
-    for(const element of document.querySelectorAll('.square') ){
+    for(const element of document.querySelectorAll('.subboard, .square') ){
         element.classList.remove('active')
     }
 }
 
+/**
+ * checks if a given board/subboard has a win or a draw
+ * @param {array} arr list of squares in the board/subboard to check 
+ * @returns {[string, number]} [winning player's character/draw character/empty string, line number or -1 if no win or draw]
+ */
 function checkwin(arr) {
     let draw = 0;
         for (const [i, line] of lines.entries()) {
@@ -377,6 +414,11 @@ function checkwin(arr) {
     return ["", -1]
 }
 
+/**
+ * creates line element drawn through winning line
+ * @param {number} i line number (index into list of possible lines) 
+ * @returns line html element
+ */
 function drawline(i) {
     const line = document.createElement('div')
     line.classList.add('line')
@@ -391,6 +433,9 @@ function drawline(i) {
     return line
 }
 
+/**
+ * reset game to beginning
+ */
 function reset() {
     for (const sq of document.querySelectorAll(".square")) {
         sq.classList.add('active')
@@ -409,6 +454,10 @@ function reset() {
     auto_move(settings_table.playerx)
 }
 
+/**
+ * generator for perfect moves
+ * @yields [board number, square number]
+ */
 function* comp0gen() {
     yield [4, 4]
     for (let i = 0; i<7; i++ ) {
@@ -424,6 +473,10 @@ function* comp0gen() {
     }
 }
 
+/**
+ * function for random valid moves
+ * @returns [board number, square number]
+ */
 function rand() {
     const options = document.querySelectorAll('.square.active')
     const choice = options[Math.floor(Math.random() * options.length)]

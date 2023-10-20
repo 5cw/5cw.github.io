@@ -31,7 +31,7 @@ div, span {
     border-radius: 2px;
 }
 
-#btn {
+#new_game {
     z-index: 2;
     position: absolute;
     top: 50%;
