@@ -1,0 +1,188 @@
+:root {
+    --disabled-board: #333344;
+    --board: #9bf;
+}
+
+#game {
+    position: relative;
+    width: 26em;
+    margin: 30vh auto;
+    background-color: var(--dark-accent);
+    border-style: solid;
+    border-color: var(--dark-accent);
+}
+
+#turn {
+
+    text-align: center;
+    font-size: 2em
+}
+
+div, span {
+    border-radius: 2px;
+}
+
+#new_game {
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border: solid;
+    border-color: var(--dark-accent);
+    border-radius: 5px;
+    font-size: 2.2em;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    position: relative;
+    gap: .3em;
+}
+
+.subboard {
+    border-style: solid;
+
+    text-align: center;
+    background-color: var(--disabled-board);
+    border-color: var(--disabled-board);
+    display: grid;
+    gap: .3em;
+    grid-template-columns: auto auto auto;
+    position: relative;
+}
+
+.subboard.active {
+    background-color: var(--board);
+    border-color: var(--board);
+}
+
+.square {
+    white-space: pre;
+
+    font-size: 2em;
+    z-index: 0;
+    border-color: black;
+    background-color: #243344;
+}
+
+.square.active, .locked .square.active:hover, #btn, #reset {
+    background-color: #2196F3;
+    cursor: default;
+}
+
+.square.active:hover, #btn:hover, #reset:hover {
+    background-color: #1133A3;
+    cursor: pointer;
+}
+
+.over {
+    font-size: 6.5em;
+    z-index: 2;
+    grid-area: 1 / 1 / span 3 / span 3;
+    pointer-events: none;
+    user-select: none
+}
+
+.line {
+    position: absolute;
+    height: calc(.4em + 3%);
+    background-color: red;
+    border-radius: 10px;
+    border: solid;
+    border-width: 1.1px;
+    border-color: darkred;
+    z-index: 2;
+}
+
+.subboard .line {
+    z-index: 1;
+}
+
+#setbtn {
+    position: absolute;
+    scale: 2;
+    top: 0.5em;
+    left: 0.5em;
+    transition: transform 0.2s, color 0s;
+    
+}
+
+#setbtn.active {
+    transform: rotate(-60deg);
+    color: grey;
+}
+
+#setbtn:hover {
+    color: #5566D4;
+    cursor: pointer;
+}
+
+#settings {
+    position: absolute;
+    right: 100%;
+    max-height: 0%;
+    transition: 0.2s;
+    font-size: 1.2em;
+    width: 75%;
+    background-color: #1F85D6;
+    border: solid var(--dark-accent);
+    margin: 0px .5em;
+    padding: .5em;
+    opacity: 0;
+    overflow: hidden;
+}
+
+#settings.active {
+    opacity: 1;
+    top: -1%;
+    max-height: 135%;
+}
+
+fieldset {
+    position: relative;
+    border: solid var(--dark-accent);
+}
+
+
+legend {
+    font-size: 1.2em;
+}
+
+label {
+    display: block;
+}
+
+#reset {
+    width: 3em;
+    border-style: solid;
+    border-width: .13em;
+    border-color: #141433;
+    padding: .1em;
+}
+
+#resetdiv {
+    margin: 2% auto auto 10%;
+    
+}
+
+#reminder {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#reminder.active {
+    opacity: 1;
+}
+
+input[type=range] {
+    width: 70%;
+}
+
+fieldset span {
+    position: absolute;
+    font-size: 1.1rem;
+    bottom: 30%;
+    left: 72%;
+}
