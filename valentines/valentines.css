@@ -1,5 +1,5 @@
 div {
-    font-size: 3rem;
+    font-size: 2rem;
     text-align: center
 }
 
@@ -10,6 +10,7 @@ div {
 svg {
     position: absolute;
     left:10%;
+    top: 5em;
     color: red;
     z-index: -1;
     animation-name: beat;
