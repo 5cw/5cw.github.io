@@ -1,0 +1,46 @@
+div {
+    font-size: 3rem;
+    text-align: center
+}
+
+#content {
+    margin: 10rem;
+}
+
+svg {
+    position: absolute;
+    left:10%;
+    color: red;
+    z-index: -1;
+    animation-name: beat;
+    animation-duration: 1.5s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes beat {
+    0% {transform: scale(100%) rotate(-30deg)}
+    10% {transform: scale(110% ) rotate(-30deg)}
+    20% {transform: scale(100%) rotate(-30deg) }
+    30% {transform: scale(110%)rotate(-30deg)}
+    40% {transform: scale(100%) rotate(-30deg)}
+    70% {transform: scale(98%) rotate(-30deg)}
+    100% {transform: scale(100%) rotate(-30deg)}
+}
+
+@keyframes spin {
+    0% {transform: rotateX(-10deg) rotateY(20deg);}
+    20% {transform: rotateX(-10deg) rotateY(-20deg);}
+    40% {transform: rotateX(10deg) rotateY(20deg);}
+    60% {transform: rotateX(10deg) rotateY(-20deg);}
+    80% {transform: rotateX(-10deg) rotateY(-20deg);}
+    100% {transform: rotateX(-10deg) rotateY(20deg);}
+    
+}
+
+#name {
+    margin: 1rem;
+    font-size: 1.2em;
+    animation-name: spin;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+}
