@@ -1,0 +1,100 @@
+body {
+    background-color: black;
+    font-smooth: always;
+    user-select: none;
+}
+
+.contain {
+    display: grid;
+    grid-template-columns: repeat(16, min-content);
+    grid-gap: .3em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.board {
+    display: grid;
+    grid-area: 2 / 2 / span 15 / span 15;
+    grid-template-columns: repeat(15, 2em);
+    grid-gap: .2em;
+    padding: .2em;
+    font-size: 1.5em;
+    background-color: dimgray;
+    border-radius: 1px;
+}
+
+.label {
+    margin-top: .3em;
+    text-align: center;
+    font-family: "monospace";
+    font-weight: bold;
+    font-size: 1.6em;
+    color: white;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: pointer;
+}
+
+.column.active, .row.active {
+    border-color: lime;
+    margin: -.4em;
+    border-style: solid;
+    border-width: .3em;
+    z-index: 3;
+    border-radius: .08em;
+}
+
+
+.column.done, .row.done {
+    background-color: #772222;
+    z-index: 2;
+}
+
+.square {
+    text-align: center;
+    line-height: 2em;
+    border-radius: .1em;
+    height: 2em;
+    background-color: #434343;
+    font-family: "monospace";
+    font-weight: bolder;
+}
+
+.TW {
+    background-color: #f99;
+}
+
+.DW {
+    background-color: #FFD580;
+}
+
+.TL {
+    background-color: #88f;
+}
+
+.DL {
+    background-color: #bbf;
+}
+
+
+.square.dark {
+    background-color: #111;
+}
+
+.TW.dark {
+    background-color: #422;
+}
+
+.DW.dark {
+    background-color: #431;
+}
+
+.TL.dark {
+    background-color: #113;
+}
+
+.DL.dark {
+    background-color: #224;
+}
