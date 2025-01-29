@@ -163,13 +163,13 @@ for (const label of document.querySelectorAll('.label')) {
     //console.log('e')
     const clickfn = function (final) {
        // console.log(this)
-
         if (this == "shuffle") {
             for (const shuffling of document.querySelectorAll('.shuffling')) {
                 shuffling.classList.remove('shuffling')
             }
             pel.classList.add('shuffling')
             update_squares('shuffling', pid)
+
             beep(50, 300, .1, 'square')
             if (final) {
                 setTimeout(() => {
@@ -182,15 +182,15 @@ for (const label of document.querySelectorAll('.label')) {
             }
         } else if (pel.classList.contains('done')) {
             pel.classList.remove('done');
-            beep(100, 200, .1, 'square')
+            beep(50, 300, .04, 'square')
         } else if (pel.classList.contains('active')) {
             pel.classList.remove('active')
-            beep(100, 200, .1, 'square')
+            beep(50, 300, .04, 'square')
             pel.classList.add('done')
             update_squares('done', pid)
         } else if (!document.querySelector('.active')) {
             pel.classList.add('active')
-            beep(100, 500, .1, 'square')
+            beep(50, 300, .04, 'square')
             update_squares('active', pid)
         }
         update_inputs()
