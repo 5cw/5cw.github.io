@@ -263,7 +263,7 @@ function submitWord() {
     if (lane.id[0] == 'r') {
         dx = 1;
         dy = 0;
-        if (x + word.length > 15) {
+        if (x + word.length > 16) {
             report("Word too long, goes off edge of board.", 0)
             return
         }
@@ -277,7 +277,7 @@ function submitWord() {
     } else {
         dx = 0;
         dy = 1;
-        if (y + word.length > 15) {
+        if (y + word.length > 16) {
             report("Word too long, went off edge of board", 0)
             return
         }
