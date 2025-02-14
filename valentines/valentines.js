@@ -61,6 +61,7 @@ function update_window(message) {
         return
     }
     document.getElementById('lmvd').textContent = "happy last minute valentine's day"
+    document.querySelector('svg').style = ""
     if (message.slice(8,12) == "2025") {
         const splt = message.slice(12).split('::')
     
