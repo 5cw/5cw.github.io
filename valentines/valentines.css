@@ -12,6 +12,7 @@ svg {
     left:10%;
     top: 5em;
     color: red;
+    rotate: -30deg;
     z-index: -1;
     animation-name: beat;
     animation-duration: 1.5s;
@@ -19,29 +20,47 @@ svg {
 }
 
 @keyframes beat {
-    0% {transform: scale(100%) rotate(-30deg)}
-    10% {transform: scale(110% ) rotate(-30deg)}
-    20% {transform: scale(100%) rotate(-30deg) }
-    30% {transform: scale(110%)rotate(-30deg)}
-    40% {transform: scale(100%) rotate(-30deg)}
-    70% {transform: scale(98%) rotate(-30deg)}
-    100% {transform: scale(100%) rotate(-30deg)}
+    0% {transform: scale(100%) }
+    10% {transform: scale(110% )}
+    20% {transform: scale(100%)}
+    30% {transform: scale(110%)}
+    40% {transform: scale(100%)}
+    70% {transform: scale(98%) }
+    100% {transform: scale(100%) }
 }
 
 @keyframes spin {
-    0% {transform: rotateX(-10deg) rotateY(20deg);}
-    20% {transform: rotateX(-10deg) rotateY(-20deg);}
-    40% {transform: rotateX(10deg) rotateY(20deg);}
-    60% {transform: rotateX(10deg) rotateY(-20deg);}
-    80% {transform: rotateX(-10deg) rotateY(-20deg);}
-    100% {transform: rotateX(-10deg) rotateY(20deg);}
+    0% {transform: rotateX(-5deg) rotateY(10deg) perspective(5cm) translate3d(0, 0, 1cm);}
+    30% {transform: rotateX(-5deg) rotateY(-10deg) perspective(5cm) translate3d(0, 0, 1cm);}
+    50% {transform: rotateX(5deg) rotateY(-10deg) perspective(5cm) translate3d(0, 0, 1cm);}
+    80% {transform: rotateX(5deg) rotateY(10deg) perspective(5cm) translate3d(0, 0, 1cm);}
+    100% {transform: rotateX(-5deg) rotateY(10deg) perspective(5cm) translate3d(0, 0, 1cm);}
     
 }
 
 #name {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr;
     margin: 1rem;
     font-size: 1.2em;
     animation-name: spin;
+    animation-timing-function: cubic-bezier(.2,0,.8,1);
+    transform-style: preserve-3d;
     animation-duration: 5s;
     animation-iteration-count: infinite;
 }
+
+#shadow {
+    color: #800000;
+    grid-area: 1 / 1 / 2 / 2;
+    animation-name: beat;
+    animation-duration: 1.2s;
+    font-weight: 900;
+    animation-iteration-count: infinite;
+}
+#nametext {
+    transform: translate3d(0, 0, .4cm);
+    grid-area: 1 / 1 / 2 / 2;
+}
+
