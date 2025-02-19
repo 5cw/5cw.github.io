@@ -1,0 +1,132 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    /* ... */
+  }
+#time {
+    font-size: 50vh;
+    padding-top: 5%;
+    text-align: center;
+    font-weight: 470;
+}
+
+#minutes, #seconds {
+    font-family: 'Roboto Mono';
+    
+}
+#colon {
+    vertical-align: 4%;
+    font-family: 'Open Sans';
+}
+.veryover #time {
+    animation: .7s linear 0s infinite running veryovertime;
+}
+
+@keyframes veryovertime {
+    0% {color: #ff8888;}
+    15% {color: #ff8888;}
+    15.01% {color: #990000}
+    30% {color: #990000}
+    30.01% {color: #ff8888;}
+    45% {color: #ff8888;}
+    45.01% {color: #990000}
+    100% {color: #990000}
+}
+
+
+.over #time {
+    animation: 1s linear 0s infinite running overtime;
+}
+
+@keyframes overtime {
+    0% {color: #ff8888;}
+    15% {color: #ff8888;}
+    15.01% {color: #dd2222}
+    30% {color: #dd2222}
+    30.01% {color: #ff8888;}
+    45% {color: #ff8888;}
+    45.01% {color: #dd2222}
+    100% {color: #dd2222}
+}
+
+kbd {
+    background-color: #eee;
+    border-radius: 3px;
+    border: 1px solid #b4b4b4;
+    box-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.2),
+      0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+    color: #333;
+    display: inline-block;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+  }
+
+
+.tint #time {
+    color: #ff8888;
+}
+
+.close #time {
+    animation: 1.7s linear 0s infinite running close;
+}
+
+@keyframes close {
+    0% {color: #ff8888;}
+    50% {color: #ff8888;}
+    50.01% {color: #ff7070}
+    100% {color: #ff7070}
+}
+
+#help {
+    font-size: 1.3em;
+    position: fixed;
+    background: #ffffff22;
+    margin: .5em;
+}
+
+#panel {
+    background: #ff000022;
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+td {
+    padding: .09em;
+}
+
+#bar {
+    position: fixed;
+    bottom: 15%;
+    left: 1%;
+    height: 2em;
+    width: 98%;
+    background-color: #3f2cbd;
+}
+
+#progress {
+
+    height: 100%;
+    background-color: #cac2ff;
+}
+
+#overprogress {
+    position: fixed;
+    bottom: 12%;
+    left: 0%;
+    height: 2em;
+    background-color: #cac2ff;
+}
+
+.over #progress, .over #overprogress {
+    background-color: #ff8888;
+}
+
+.veryover #progress, .veryover #overprogress {
+    background-color: #dd2222;
+}

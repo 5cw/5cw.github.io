@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steakhouse Chiffon Table Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .input-container {
+            margin: 20px 0;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+            text-transform: uppercase;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+        .info {
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Steakhouse Chiffon</h1>
+    <p>Enter your table number to start ordering</p>
+    
+    <div class="input-container">
+        <input type="text" id="tableNumber" placeholder="e.g., W1, E45, G77">
+        <button onclick="redirectToOrder()">Go</button>
+    </div>
+    
+    <p id="errorMessage" class="error">Please enter a valid table number (e.g., W1-W5, E10-E65, G77, or G79)</p>
+    
+    <p class="info">
+        Valid table numbers: W1-W5, E10-E65, G77, or G79
+    </p>
+
+    <script>
+        function redirectToOrder() {
+            const errorMessage = document.getElementById('errorMessage');
+            let input = document.getElementById('tableNumber').value.trim().toUpperCase();
+            
+            console.log('Input received:', input);
+
+            // Check if input is empty
+            if (!input) {
+                console.log('Empty input');
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Split input into prefix and number
+            const prefix = input.charAt(0);
+            const numberStr = input.slice(1);
+            console.log('Parsed prefix:', prefix, 'number string:', numberStr);
+
+            // Check if prefix is valid
+            if (!['W', 'E', 'G'].includes(prefix)) {
+                console.log('Invalid prefix');
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Check if the rest is a valid number
+            const number = parseInt(numberStr);
+            if (isNaN(number)) {
+                console.log('Invalid number part');
+                errorMessage.style.display = 'block';
+                return;
+            }
+            console.log('Parsed number:', number);
+
+            // Validate against allowed tables
+            let isValid = false;
+
+            if (prefix === 'W' && number >= 1 && number <= 5) {
+                isValid = true;
+                console.log('Valid W table');
+            }
+            else if (prefix === 'E' && number >= 10 && number <= 65) {
+                isValid = true;
+                console.log('Valid E table');
+            }
+            else if (prefix === 'G' && (number === 77 || number === 79)) {
+                isValid = true;
+                console.log('Valid G table');
+            }
+            else {
+                console.log('Invalid table number for prefix', prefix);
+            }
+
+            if (isValid) {
+                errorMessage.style.display = 'none';
+                const url = `http://www.toasttab.com/order-and-pay/steakhousechiffon/table/ ${input}`;
+                console.log('Redirecting to:', url);
+                window.location.href = url;
+            } else {
+                errorMessage.style.display = 'block';
+                console.log('Validation failed');
+            }
+        }
+
+        // Allow enter key to submit
+        document.getElementById('tableNumber').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                redirectToOrder();
+            }
+        });
+    </script>
+</body>
+</html>

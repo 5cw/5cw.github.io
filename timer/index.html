@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+<meta charset="UTF-8">
+<title>Open Mic Timer</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../global.css">
+<link rel="stylesheet" href="timer.css">
+
+<style>
+</style>
+</head>
+<body>
+    <div id="help">
+        <table>
+            <tbody>
+                
+                <tr>
+                    <td>
+                        <kbd>
+                            R
+                        </kbd>
+                    </td>
+                    <td>
+                        Reset timer to 3 minutes and pause.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            S
+                        </kbd>
+                    </td>
+                    <td>
+                        Reset timer to 3 minutes and start.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            0
+                        </kbd>-<kbd>
+                            9
+                        </kbd>
+                    </td>
+                    <td>
+                        Reset timer to <kbd>n</kbd> minutes and pause.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            space
+                        </kbd>
+                    </td>
+                    <td>
+                        Pause and unpause timer.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            🠉
+                        </kbd>
+                    </td>
+                    <td>
+                        +30 seconds
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <kbd>
+                            🠋
+                        </kbd>
+                    </td>
+                    <td>
+                        -30 seconds
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            🠈
+                        </kbd>
+                    </td>
+                    <td>
+                        +5 seconds
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            🠊 
+                        </kbd>
+                    </td>
+                    <td>
+                         -5 seconds
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <kbd>
+                            H
+                        </kbd>
+                    </td>
+                    <td>
+                        show/hide this dialog
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table id ='panel' class="hidden">
+            <tbody>
+                <tr>
+                    <td>
+                        <kbd>
+                            +
+                        </kbd>
+                    </td>
+                    <td>
+                        speed up clock 5%
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            -
+                        </kbd>
+                    </td>
+                    <td>
+                        slow down clock 5%
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            N
+                        </kbd>
+                    </td>
+                    <td>
+                        reset clock speed
+                        
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <kbd>
+                            Q
+                        </kbd>
+                    </td>
+                    <td>
+                        hold to show hidden options
+                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td id="readout">
+                        1s = 1000ms
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    <div id="visuals">
+        <div id="time">
+            <span id="minutes">3</span><span id="colon">:</span><span id="seconds">00</span>
+        </div>
+        <div id="bar">
+            <div id="progress" style="width: 0%;"></div>
+        </div>
+        <div id="overprogress" style="width: 0%;"></div>
+    </div>
+<script src="timer.js"></script>
+</body>
+</html> 
