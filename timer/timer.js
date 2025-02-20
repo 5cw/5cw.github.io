@@ -31,7 +31,7 @@ const palettes = {
 const paletteEl = document.getElementById('palette');
 let palette = palettes[paletteEl.value] || []
 
-.addEventListener('input', ev => {
+palette.addEventListener('input', ev => {
     palette = palettes[ev.target.value]
 })
 const negative = document.getElementById('negative')
