@@ -31,7 +31,7 @@ const palettes = {
 const paletteEl = document.getElementById('palette');
 let palette = palettes[paletteEl.value] || []
 
-palette.addEventListener('input', ev => {
+paletteEl.addEventListener('input', ev => {
     palette = palettes[ev.target.value]
 })
 const negative = document.getElementById('negative')
@@ -66,6 +66,7 @@ function update() {
 
     m.textContent = (value < 0 ? '-' : '' ) + Math.floor(v / 60) 
     s.textContent = String(v % 60).padStart(2, '0')
+    time.className = ''
     for (const [t, setting] of palette) {
         if (value <= t) {
             time.className = setting;

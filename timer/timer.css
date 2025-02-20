@@ -132,7 +132,7 @@ td {
 
 #overprogress {
     position: fixed;
-    bottom: 12%;
+    bottom: 10%;
     left: 0%;
     height: 2em;
     background-color: #cac2ff;
