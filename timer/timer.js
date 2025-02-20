@@ -2,18 +2,19 @@ let value = 3 * 60;
 let full = 3 * 60;
 let fps = 20;
 let tickID;
-let lastsec;
+let second = 1000
+let newsec = second
 let running = false;
 const time = document.getElementById('visuals')
 const m = document.getElementById('minutes')
 const s = document.getElementById('seconds')
 
 
-const pallettes = {
+const palettes = {
     mic: [
         [-30, 'veryover'],
         [0, 'over'],
-        [30, 'close'],
+        [15, 'close'],
         [60, 'tint']
     ],
     subtler: [
@@ -27,33 +28,76 @@ const pallettes = {
     ],
     none: []
 }
+const paletteEl = document.getElementById('palette');
+let palette = palettes[paletteEl.value] || []
 
-const urlParams = new URLSearchParams(window.location.search)
-const pallette = pallettes[urlParams.get('pallette') || 'none'] || []
+.addEventListener('input', ev => {
+    palette = palettes[ev.target.value]
+})
+const negative = document.getElementById('negative')
+const overflow = document.getElementById('overflow')
 
+let goNegative;
+let doOverflow;
 
+const updateN = (ev) => {
+    goNegative = negative.checked;
+    if (goNegative) {
+        overflow.classList.remove('readonly')
+    } else {
+        overflow.classList.add('readonly')
+        overflow.checked = false
+        doOverflow = false
+    }
+}
 
+const updateO = (ev) => {
+    doOverflow = overflow.checked;
+}
+
+updateN()
+updateO()
+
+negative.addEventListener('input', updateN)
+overflow.addEventListener('input', updateO)
 
 function update() {
     let v = Math.abs(value)
 
     m.textContent = (value < 0 ? '-' : '' ) + Math.floor(v / 60) 
     s.textContent = String(v % 60).padStart(2, '0')
-    for (const [t, setting] of pallette) {
-        if (value < t) {
+    for (const [t, setting] of palette) {
+        if (value <= t) {
             time.className = setting;
             break;
         }
     }
     let completed = (full - value) / full * 100
-    document.getElementById('progress').style.width = (completed < 102 ? completed : 102) + '%'
-    document.getElementById('overprogress').style.width = (completed > 102 ? completed - 102 : 0) + '%'
+    document.getElementById('progress').style.width = Math.min(completed, doOverflow ? 102 : 100) + '%'
+    document.getElementById('overprogress').style.width = Math.max(completed - 102, 0) + '%'
 }
 
 function tickDown() {
     value -= 1;
+    if (!goNegative && value < 0) {
+        value = 0;
+    }
+    if (newsec != second) {
+        clearInterval(tickID)
+        tickID = setInterval(tickDown, newsec)
+        second = newsec
+    }
     update()
-    lastsec = Date.now()
+}
+
+function stop() {
+    running = false
+    time.classList.add('paused')
+}
+stop()
+function start() {
+    running = true
+    time.classList.remove('paused')
 }
 
 function reset(val = undefined) {
@@ -61,7 +105,7 @@ function reset(val = undefined) {
         value = val
         full = val
         update()
-        running = false
+        stop()
     }
     clearInterval(tickID)
     tickID = undefined;
@@ -69,22 +113,12 @@ function reset(val = undefined) {
     
 }
 
-
-
-
-let second = 1000
-
-function syncSecond(nsecond) {
-    second = nsecond
-    document.getElementById('readout').textContent = '1s = ' + Math.floor(second) + 'ms'
-    if (running) {
-        setTimeout(() => {
-            clearInterval(tickID)
-            tickID = setInterval(tickDown, second)
-        }, lastsec + 1000 - Date.now())
-    }
-    
+function updateSecond(val) {
+    newsec = val;
+    document.getElementById('readout').textContent = '1s = ' + Math.floor(newsec) + 'ms'
 }
+
+
 
 addEventListener('keydown', (event) => {
     if (event.key == 's' || event.key == 'r') {
@@ -100,24 +134,25 @@ addEventListener('keydown', (event) => {
      else if (event.key == 'ArrowRight') 
         value -= 5;
      else if (event.key == '_' || event.key == '-') {
-        syncSecond(second / .95)
+        updateSecond(newsec  + 100)
      } else if (event.key == '+' || event.key == '=') {
-        syncSecond(second  * .95)
+        updateSecond(newsec - 100)
      } else if (event.key == 'n'){
-        syncSecond(1000)
+        updateSecond(1000)
      } else if (event.key == 'h'){
         document.getElementById('help').classList.toggle('hidden')
-     } else if (event.key == 'q' ) {
-        document.getElementById('panel').classList.remove('hidden')
-        
-    }
+     } 
+     if (value > full) {
+        full = value
+     }
     if (event.key == 's' || event.key == ' ') {
         reset()
         if (!running) {
             tickID = setInterval(tickDown, second)
-            running = true
+            start()
+
         } else {
-            running = false
+            stop()
         }
         
     }

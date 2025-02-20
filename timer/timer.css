@@ -69,8 +69,16 @@ kbd {
     color: #ff8888;
 }
 
+td:first-child {
+    text-align: right;
+}
+
 .close #time {
     animation: 1.7s linear 0s infinite running close;
+}
+
+.paused #time {
+    color: #aaa;
 }
 
 @keyframes close {
@@ -83,8 +91,11 @@ kbd {
 #help {
     font-size: 1.3em;
     position: fixed;
-    background: #ffffff22;
+    background: #06b0ff5d;
     margin: .5em;
+    padding: .5em;
+    max-width: 35em;
+    border-radius: .3em;
 }
 
 #panel {
@@ -97,7 +108,11 @@ kbd {
 }
 
 td {
-    padding: .09em;
+    padding: .1em;
+}
+
+#tips {
+    padding: .5em;
 }
 
 #bar {
@@ -129,4 +144,18 @@ td {
 
 .veryover #progress, .veryover #overprogress {
     background-color: #dd2222;
+}
+
+input.readonly {
+    opacity: .5;
+    cursor: default;
+    pointer-events: none;
+    
+ }
+
+#pause {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translate(-50%);
 }

@@ -17,6 +17,40 @@
     <div id="help">
         <table>
             <tbody>
+                <tr>
+                    <td>
+                        <select name="palette" id="palette" selected="mic">
+                              <option value="none">None</option>
+                              <option value="subtlest">Very Subtle</option>
+                              <option value="subtler">Subtle</option>
+                              <option value="mic">Open Mic</option>
+                            </optgroup>
+                          </select>
+                    </td>
+                    <td>
+                        Palette
+                    </td>
+                    
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="checkbox" id="negative" name="negative" value="negative" checked>
+                    </td>
+                    <td>
+                        Go Below 0:00
+                    </td>
+                    
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" id="overflow" name="overflow" value="overflow" checked>
+                    </td>
+                    <td>
+                        Wrap Progress
+                    </td>
+                    
+                </tr>
                 
                 <tr>
                     <td>
@@ -102,20 +136,7 @@
                     </td>
                 </tr>
                 
-                <tr>
-                    <td>
-                        <kbd>
-                            H
-                        </kbd>
-                    </td>
-                    <td>
-                        show/hide this dialog
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <table id ='panel' class="hidden">
-            <tbody>
+                
                 <tr>
                     <td>
                         <kbd>
@@ -123,7 +144,7 @@
                         </kbd>
                     </td>
                     <td>
-                        speed up clock 5%
+                        speed up clock 10%
                     </td>
                 </tr>
                 <tr>
@@ -133,7 +154,7 @@
                         </kbd>
                     </td>
                     <td>
-                        slow down clock 5%
+                        slow down clock 10%
                     </td>
                 </tr>
                 <tr>
@@ -147,18 +168,6 @@
                         
                     </td>
                 </tr>
-                
-                <tr>
-                    <td>
-                        <kbd>
-                            Q
-                        </kbd>
-                    </td>
-                    <td>
-                        hold to show hidden options
-                        
-                    </td>
-                </tr>
                 <tr>
                     <td>
                     </td>
@@ -166,13 +175,27 @@
                         1s = 1000ms
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <kbd>
+                            H
+                        </kbd>
+                    </td>
+                    <td>
+                        show/hide this dialog
+                    </td>
+                </tr>
             </tbody>
         </table>
-        
+        <div id="tips">
+            <p>If clock is not responding, click somewhere in the window to refocus the tab.</p>
+            <p>If the clock malfunctions, reload the page.</p>
+        </div>
     </div>
     <div id="visuals">
         <div id="time">
             <span id="minutes">3</span><span id="colon">:</span><span id="seconds">00</span>
+                  
         </div>
         <div id="bar">
             <div id="progress" style="width: 0%;"></div>
